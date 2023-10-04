@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Container } from "@mui/material";
-import Carousel from "./Carousel";
+import Carousel from "../components/Carousel";
 import { searchMoviesByName, searchTvShowsByName } from "../action/fetch";
 import { useParams } from "react-router-dom";
-import AppBarComponent from "./AppBar";
-import { calculateSimilarity } from "./calculateSimilarity";
+import AppBarComponent from "../components/AppBar";
+import { calculateSimilarity } from "../constant/calculateSimilarity";
 
 function SearchPage() {
   const { searchInput } = useParams();
@@ -18,13 +18,13 @@ function SearchPage() {
     ])
       .then(([movieResults, tvResults]) => {
         const mergedResults = [...movieResults, ...tvResults];
-        const sortedResults = mergedResults.sort((a, b) => {
+        const sortedResults = mergedResults.sort((itemA, itemB) => {
           const similarityA = calculateSimilarity(
-            a.title || a.name,
+            itemA.title || itemA.name,
             searchInput
           );
           const similarityB = calculateSimilarity(
-            b.title || b.name,
+            itemB.title || itemB.name,
             searchInput
           );
 

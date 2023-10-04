@@ -14,13 +14,13 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-function mapGenreIdsToNames(genreIds, genreMap) {
+const mapGenreIdsToNames = (genreIds, genreMap) => {
   const genreNames = genreIds.map((id) => {
     const genreName = Object.keys(genreMap).find((key) => genreMap[key] === id);
     return genreName;
   });
   return genreNames.join(", ");
-}
+};
 
 function ModalDetailes({ item, onClose }) {
   const movieGenres = mapGenreIdsToNames(item.genre_ids, genreMapMovie);

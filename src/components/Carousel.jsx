@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import ModalDetails from "../components/ModalDetailes";
+import ModalDetails from "./ModalDetailes";
 
 const cardTextStyle = {
   backgroundColor: "rgba(24, 20, 20, 0.7)",
@@ -26,26 +26,24 @@ const cardTextStyle = {
 function Carousel({ getFunction, title, genreId, apiFetched }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [topMoviesData, setTopMoviesData] = useState([]);
+  const [itemsData, setItemsData] = useState([]);
 
   const itemsPerPage = 8;
   const dynamicNumberOfItems = 32;
 
   useEffect(() => {
     if (getFunction) {
-      const topMovies =
+      const items =
         genreId !== null
           ? getFunction(dynamicNumberOfItems, genreId)
           : getFunction(dynamicNumberOfItems);
-      const parsedTopMovies = topMovies.map((jsonString) =>
-        JSON.parse(jsonString)
-      );
-      setTopMoviesData(parsedTopMovies);
+      const parsedItems = items.map((jsonString) => JSON.parse(jsonString));
+      setItemsData(parsedItems);
     } else if (apiFetched) {
-      setTopMoviesData(apiFetched);
+      setItemsData(apiFetched);
     }
   }, [getFunction, apiFetched, genreId]);
-  const totalObjects = topMoviesData.length;
+  const totalObjects = itemsData.length;
   const totalPages = Math.ceil(totalObjects / itemsPerPage);
 
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -82,7 +80,7 @@ function Carousel({ getFunction, title, genreId, apiFetched }) {
           {title}
         </Typography>
         <Grid container spacing={2}>
-          {topMoviesData.slice(startIndex, endIndex).map((item) => (
+          {itemsData.slice(startIndex, endIndex).map((item) => (
             <Grid item key={item.id} md={1.5}>
               <Card
                 sx={{

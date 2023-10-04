@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { Container, Typography } from "@mui/material";
-import Carousel from "./Carousel";
+import Carousel from "../components/Carousel";
 import useFuncOfStorage from "../action/services/useFuncOfStorage";
 import useHandleData from "../action/services/useHandleData";
-import AppBarComponent from "./AppBar";
-import ImageBackground from "./ImageBackground";
+import AppBarComponent from "../components/AppBar";
+import ImageBackground from "../components/ImageBackground";
 
 function StreamingPage() {
   const requestForMoviesAndTvShows = 500;
@@ -15,9 +15,8 @@ function StreamingPage() {
 
   useEffect(() => {
     fetchAndSaveDataToLocalStorage(requestForMoviesAndTvShows);
-  }, [isLoading]);
+  }, []);
 
-  console.log("streaming", isLoading);
   return (
     <div>
       {isLoading ? (

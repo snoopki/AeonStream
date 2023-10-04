@@ -1,5 +1,4 @@
-import { genreMap } from "../../constant/genreMapTvShows.js";
-import { getMovieById } from "../fetch.js";
+
 import useLocalStorage from "./useLocalStorage.js";
 
 function useFuncOfStorage() {

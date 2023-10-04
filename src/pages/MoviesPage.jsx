@@ -1,10 +1,10 @@
 import React from "react";
 import { Container } from "@mui/material";
-import Carousel from "./Carousel";
+import Carousel from "../components/Carousel";
 import { genreMapMovie } from "../constant/genreMapMovies";
 import useFuncOfStorage from "../action/services/useFuncOfStorage";
-import AppBarComponent from "./AppBar";
-import ImageBackground from "./ImageBackground";
+import AppBarComponent from "../components/AppBar";
+import ImageBackground from "../components/ImageBackground";
 
 function MoviesPage() {
   const GetFromStorage = useFuncOfStorage();
