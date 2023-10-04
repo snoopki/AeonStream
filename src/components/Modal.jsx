@@ -27,7 +27,7 @@ function Modal({ onClose }) {
       id: newUserId,
       name: newUserName,
       imgURL:
-        "https://avatars.akamai.steamstatic.com/28e765fbb2612a9541dd16d2f73317f2f23a26346_full.jpg",
+        "https://avatars.akamai.steamstatic.com/28e765fbb2612a9541dd162f73317f2f23a26346_full.jpg",
     };
 
     users.push(newUser);
