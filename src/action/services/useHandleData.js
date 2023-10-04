@@ -38,21 +38,19 @@ function useHandleData() {
       const categoryArray = [];
       const genreArrays = {};
 
-      if (data) {
-        data.forEach((item) => {
-          categoryArray.push(`${categoryType}_${item.id}`);
-          if (item.genre_ids) {
-            item.genre_ids.forEach((genreId) => {
-              if (!genreArrays[`genre_${categoryType}_${genreId}`]) {
-                genreArrays[`genre_${categoryType}_${genreId}`] = [];
-              }
-              genreArrays[`genre_${categoryType}_${genreId}`].push(
-                `${categoryType}_${item.id}`
-              );
-            });
-          }
-        });
-      }
+      data.forEach((item) => {
+        categoryArray.push(`${categoryType}_${item.id}`);
+        if (item.genre_ids) {
+          item.genre_ids.forEach((genreId) => {
+            if (!genreArrays[`genre_${categoryType}_${genreId}`]) {
+              genreArrays[`genre_${categoryType}_${genreId}`] = [];
+            }
+            genreArrays[`genre_${categoryType}_${genreId}`].push(
+              `${categoryType}_${item.id}`
+            );
+          });
+        }
+      });
 
       localStorageHandler.saveToLocalStorage(arrayName, categoryArray);
       for (const array in genreArrays) {
@@ -61,9 +59,10 @@ function useHandleData() {
       }
     }
 
+    generateCategoryArray(data.popularTvShows, "TvShow", "popularTvShows");
+
     generateCategoryArray(data.topMovies, "movie", "topMovies");
     generateCategoryArray(data.popularMovies, "movie", "popularMovies");
-    generateCategoryArray(data.popularTvShows, "TvShow", "popularTvShows");
     generateCategoryArray(data.topTvShows, "TvShow", "topTvShows");
 
     setIsLoading(false);

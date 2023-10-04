@@ -1,4 +1,3 @@
-
 import useLocalStorage from "./useLocalStorage.js";
 
 function useFuncOfStorage() {
@@ -17,7 +16,6 @@ function useFuncOfStorage() {
 
     const categoryObjects = categoryArray.split(",").slice(0, num);
     const categoryArrayWithDetails = [];
-
     for (const itemId of categoryObjects) {
       const itemDetails = localStorageHandler.readFromLocalStorage(itemId);
 

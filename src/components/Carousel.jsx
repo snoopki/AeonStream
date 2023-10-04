@@ -81,8 +81,9 @@ function Carousel({ getFunction, title, genreId, apiFetched }) {
         </Typography>
         <Grid container spacing={2}>
           {itemsData.slice(startIndex, endIndex).map((item) => (
-            <Grid item key={item.id} md={1.5}>
+            <Grid item md={1.5}>
               <Card
+                key={item.id}
                 sx={{
                   position: "relative",
                   height: "100%",

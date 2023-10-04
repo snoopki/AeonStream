@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Container, Typography } from "@mui/material";
+import { Container, Typography, Box } from "@mui/material";
 import Carousel from "../components/Carousel";
 import useFuncOfStorage from "../action/services/useFuncOfStorage";
 import useHandleData from "../action/services/useHandleData";
@@ -18,41 +18,47 @@ function StreamingPage() {
   }, []);
 
   return (
-    <div>
+    <Box>
       {isLoading ? (
         <Typography
           variant="h6"
           component="div"
           align="left"
-          style={{ ml: 3, mt: 5 }}
+          sx={{ ml: 3, mt: 5 }}
         >
           Loading...
         </Typography>
       ) : (
-        <>
+        <Box>
           <ImageBackground />
           <AppBarComponent />
-          <Container maxWidth={false} sx={{ mt: 15 }}>
+          <Container maxWidth={false} sx={{ mt: 10 }}>
             <Carousel
               getFunction={GetFromStorage.getTopMoviesObject}
               title="Top Movies"
             />
-            <Carousel
-              getFunction={GetFromStorage.getPopularMoviesObject}
-              title="Popular Movies"
-            />
-            <Carousel
-              getFunction={GetFromStorage.getTopTvShowsObject}
-              title="Top TV Shows"
-            />
-            <Carousel
-              getFunction={GetFromStorage.getPopularTvShowsObject}
-              title="Popular TV Shows"
-            />
+            <Box mt={5}>
+              <Carousel
+                getFunction={GetFromStorage.getPopularMoviesObject}
+                title="Popular Movies"
+              />
+            </Box>
+            <Box mt={5}>
+              <Carousel
+                getFunction={GetFromStorage.getPopularTvShowsObject}
+                title="Popular TV Shows"
+              />
+            </Box>
+            <Box mt={5} mb={10}>
+              <Carousel
+                getFunction={GetFromStorage.getTopTvShowsObject}
+                title="Top TV Shows"
+              />
+            </Box>
           </Container>
-        </>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 }
 
