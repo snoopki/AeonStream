@@ -63,7 +63,7 @@ function AppBarComponent() {
             </Typography>
           </Grid>
           <Grid item sx={{ flexGrow: 1 }}>
-            <Grid container spacing={2} justifyContent="center">
+            <Grid container spacing={2} justifyContent="flex-start">
               <Grid item>
                 <Button
                   color="secondary"
@@ -95,16 +95,7 @@ function AppBarComponent() {
                 <Button
                   color="secondary"
                   sx={{ fontWeight: "bold" }}
-                  onClick={() => handleLinkClick("faq")}
-                >
-                  FAQ
-                </Button>
-              </Grid>
-              <Grid item sx={{ flexGrow: 1 }}>
-                <Button
-                  color="secondary"
-                  sx={{ fontWeight: "bold" }}
-                  onClick={() => handleLinkClick("contact")}
+                  onClick={() => handleLinkClick("ContactUs")}
                 >
                   Contact Us
                 </Button>
@@ -124,7 +115,7 @@ function AppBarComponent() {
             {isSearchOpen && (
               <Button
                 color="secondary"
-                sx={{ fontWeight: "bold" }}
+                sx={{ fontWeight: "bold", mt: 1 }}
                 onClick={() => handleLinkClick("search")}
               >
                 Search

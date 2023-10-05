@@ -10,7 +10,7 @@ import StreamingPage from "./pages/StreamingPage";
 import MoviesPage from "./pages/MoviesPage";
 import TvShowsPage from "./pages/TvShowsPage";
 import SearchPage from "./pages/SearchPage";
-
+import ContactUsPage from "./pages/ContactUsPage";
 import { useTheme, ThemeProvider, CssBaseline } from "@mui/material";
 import { theme } from "./context/theme";
 
@@ -36,6 +36,10 @@ function App() {
       {
         path: "/streamingPage/:id/search/:searchInput",
         element: <SearchPage />,
+      },
+      {
+        path: "/streamingPage/:id/ContactUs",
+        element: <ContactUsPage />,
       },
       {
         path: "*",

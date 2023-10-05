@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Paper, CardMedia, Fade } from "@mui/material";
 import useFuncOfStorage from "../action/services/useFuncOfStorage";
 
-function ImageBackground() {
+function ImageBackground({ getFunction }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [fade, setFade] = useState(true);
   const [showImage, setShowImage] = useState(true);
@@ -33,13 +33,18 @@ function ImageBackground() {
   const GetFromStorage = useFuncOfStorage();
 
   useEffect(() => {
-    const ItemsOnScreen =
-      GetFromStorage.getTopTvShowsObject(numOfPopularPictures);
+    const selectedFunction =
+      getFunction ||
+      (Math.random() < 0.5
+        ? GetFromStorage.getTopTvShowsObject
+        : GetFromStorage.getTopMoviesObject);
+
+    const ItemsOnScreen = selectedFunction(numOfPopularPictures);
     const parsedItemsOnScreen = ItemsOnScreen.map((jsonString) =>
       JSON.parse(jsonString)
     );
     setTopItemsData(parsedItemsOnScreen);
-  }, []);
+  }, [getFunction]);
 
   return (
     <Paper elevation={0} sx={{ position: "relative" }}>

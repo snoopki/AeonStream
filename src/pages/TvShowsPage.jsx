@@ -11,7 +11,7 @@ function TvShowsPage() {
 
   return (
     <>
-      <ImageBackground />
+      <ImageBackground getFunction={GetFromStorage.getPopularTvShowsObject} />
       <AppBarComponent />
       <Container maxWidth={false} sx={{ mt: 10 }}>
         <Grid>

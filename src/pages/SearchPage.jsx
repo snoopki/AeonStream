@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import Carousel from "../components/Carousel";
 import { searchMoviesByName, searchTvShowsByName } from "../action/fetch";
 import { useParams } from "react-router-dom";
@@ -38,12 +38,12 @@ function SearchPage() {
   }, [searchInput]);
 
   return (
-    <div>
+    <Box>
       <AppBarComponent />
       <Container maxWidth={false} sx={{ mt: 15 }}>
         <Carousel apiFetched={searchResults} title="Search result" />
       </Container>
-    </div>
+    </Box>
   );
 }
 

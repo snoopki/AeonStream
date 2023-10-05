@@ -11,7 +11,7 @@ const MoviesPage = () => {
 
   return (
     <>
-      <ImageBackground />
+      <ImageBackground getFunction={GetFromStorage.getPopularMoviesObject} />
       <AppBarComponent />
       <Container maxWidth={false} sx={{ mt: 10 }}>
         <Grid>
