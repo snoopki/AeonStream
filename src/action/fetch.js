@@ -1,4 +1,5 @@
 const MAX_PAGE_ITEMS = 20;
+const MAX_RETRIES = 3;
 
 const sendAPI = async (uri) => {
   const token =
@@ -16,69 +17,78 @@ const sendAPI = async (uri) => {
   return fetch(`${url}${uri}`, options);
 };
 
-async function requestManager(func) {
-  let retries = 3;
-  while (retries > 0) {
+const organizeFetchingPages = async (uri, num) => {
+  for (let retries = MAX_RETRIES; retries > 0; retries--) {
     try {
-      return await func();
-    } catch (e) {
-      console.log(e);
-      retries--;
+      const lastpage = Math.ceil(num / MAX_PAGE_ITEMS);
+      const movies = [];
+
+      for (let page = 1; page <= lastpage; page++) {
+        const pageUri = `${uri}&page=${page}`;
+        const response = await sendAPI(pageUri);
+        const data = await response.json();
+
+        movies.push(...data.results);
+      }
+
+      return movies.slice(0, num);
+    } catch (error) {
+      console.log(error);
     }
   }
-  throw Error("request failed");
-}
-
-const fetchShowAndMovie = async (uri, num) => {
-  const lastpage = Math.ceil(num / MAX_PAGE_ITEMS);
-  const movies = [];
-
-  for (let page = 1; page <= lastpage; page++) {
-    const pageUri = `${uri}&page=${page}`;
-    const response = await sendAPI(pageUri);
-    const data = await response.json();
-
-    const PushMovies = data.results;
-    movies.push(...PushMovies);
-  }
-
-  return movies.slice(0, num);
+  throw new Error("Request failed after 3 retries");
 };
 
 const fetchWatchID = async (uri) => {
-  const response = await sendAPI(uri);
-  const data = await response.json();
-  return data;
+  for (let retries = MAX_RETRIES; retries > 0; retries--) {
+    try {
+      const response = await sendAPI(uri);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  throw new Error("Request failed after 3 retries");
 };
 
+export const genereMovie = async () => {
+  const uri = "genre/movie/list?language=en";
+  return fetchWatchID(uri);
+};
+
+export const genereTvShow = async () => {
+  const uri = "genre/tv/list?language=en";
+  return fetchWatchID(uri);
+};
 export const getMovieById = async (movieId) => {
   const uri = `movie/${movieId}?language=en-US`;
-  return requestManager(() => fetchWatchID(uri));
+  return fetchWatchID(uri);
 };
 
 export const getTvShowById = async (tvId) => {
   const uri = `tv/${tvId}?language=en-US`;
-  return requestManager(() => fetchWatchID(uri));
+  return fetchWatchID(uri);
 };
 
 export const getTopMovies = async (num) => {
   const uri = `movie/top_rated?language=en-US`;
-  return requestManager(() => fetchShowAndMovie(uri, num));
+  return await organizeFetchingPages(uri, num);
 };
 
 export const getPopularMovies = async (num) => {
   const uri = `movie/popular?language=en-US`;
-  return fetchShowAndMovie(uri, num);
+  return organizeFetchingPages(uri, num);
 };
 
 export const getPopularTvShows = async (num) => {
   const uri = `tv/popular?language=en-US`;
-  return fetchShowAndMovie(uri, num);
+  return organizeFetchingPages(uri, num);
 };
 
 export const getTopTvShows = async (num) => {
   const uri = `tv/top_rated?language=en-US`;
-  return fetchShowAndMovie(uri, num);
+  return organizeFetchingPages(uri, num);
 };
 
 export const searchMoviesByName = async (query, num) => {
@@ -86,7 +96,7 @@ export const searchMoviesByName = async (query, num) => {
     query
   )}&include_adult=false&language=en-US`;
 
-  return fetchShowAndMovie(uri, num);
+  return organizeFetchingPages(uri, num);
 };
 
 export const searchTvShowsByName = async (query, num) => {
@@ -94,17 +104,5 @@ export const searchTvShowsByName = async (query, num) => {
     query
   )}&include_adult=false&language=en-US`;
 
-  return fetchShowAndMovie(uri, num);
-};
-
-export const genereMovie = async () => {
-  const response = await sendAPI("genre/movie/list?language=en");
-  const data = await response.json();
-  return data;
-};
-
-export const genereTvShow = async () => {
-  const response = await sendAPI("genre/tv/list?language=en");
-  const data = await response.json();
-  return data;
+  return organizeFetchingPages(uri, num);
 };

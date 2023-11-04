@@ -1,37 +1,38 @@
-function useLocalStorage() {
-  const saveToLocalStorage = (key, value) => {
-    const convertedValue = Array.isArray(value)
-      ? value
-      : typeof value === "object"
-      ? JSON.stringify(value)
-      : value;
-    localStorage.setItem(key, convertedValue);
+export const saveToLocalStorage = (key, value) => {
+  let convertedValue;
 
-    return value;
-  };
+  const isArray = Array.isArray(value);
+  const isObject = typeof value === "object";
 
-  const readFromLocalStorage = (key) => {
-    const value = localStorage.getItem(key);
-    const typeOfValue = typeof value;
+  switch (true) {
+    case isArray:
+      convertedValue = value;
+      break;
+    case isObject:
+      convertedValue = JSON.stringify(value);
+      break;
+    default:
+      convertedValue = value;
+  }
 
-    if (!value) return null;
+  localStorage.setItem(key, convertedValue);
+  return value;
+};
 
-    switch (typeOfValue) {
-      case "boolean":
-        return value === "true";
-      case "number":
-        return +value;
-      case "object":
-        return JSON.parse(value);
-      default:
-        return value;
-    }
-  };
+export const readFromLocalStorage = (key) => {
+  const value = localStorage.getItem(key);
+  const typeOfValue = typeof value;
 
-  return {
-    saveToLocalStorage,
-    readFromLocalStorage,
-  };
-}
+  if (!value) return null;
 
-export default useLocalStorage;
+  switch (typeOfValue) {
+    case "boolean":
+      return value === "true";
+    case "number":
+      return +value;
+    case "object":
+      return JSON.parse(value);
+    default:
+      return value;
+  }
+};

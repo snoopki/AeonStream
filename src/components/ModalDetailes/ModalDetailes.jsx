@@ -11,8 +11,15 @@ import {
   Grid,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { genreMapMovie } from "../constant/genreMapMovies";
-import { genreMapTvShow } from "../constant/genreMapTvShows";
+import { genreMapMovie } from "../../constant/genreMapMovies";
+import { genreMapTvShow } from "../../constant/genreMapTvShows";
+import {
+  ECardContent,
+  EDialog,
+  EIconButton,
+  ETypography,
+  ETypographyBigSpace,
+} from "./style";
 
 const mapGenreIdsToNames = (genreIds, genreMap) => {
   const genreNames = genreIds.map((id) => {
@@ -28,11 +35,7 @@ function ModalDetails({ item, onClose }) {
   const genres = item.title ? movieGenres : tvShowGenres;
 
   return (
-    <Dialog
-      open={true}
-      fullScreen
-      sx={{ backgroundColor: "rgba(0, 0, 0, 0.9)" }}
-    >
+    <EDialog open={true} fullScreen>
       <DialogContent>
         <Grid container spacing={2}>
           <Grid item md={6}>
@@ -46,12 +49,12 @@ function ModalDetails({ item, onClose }) {
             </Card>
           </Grid>
           <Grid item md={6}>
-            <CardContent sx={{ color: "#fff" }}>
+            <ECardContent>
               <Typography variant="h3" color="primary">
                 {item.title ? item.title : item.name}
               </Typography>
-              <Typography variant="body1" sx={{ color: "secondary", mt: 2 }}>
-                Genres: {genres}
+              <Typography variant="body1" sx={{ mt: 2 }}>
+                Genres: {genres}{" "}
               </Typography>
               <Typography variant="body1" sx={{ mt: 1 }}>
                 Vote Average: {item.vote_average}
@@ -64,20 +67,19 @@ function ModalDetails({ item, onClose }) {
                 Overview:
               </Typography>
               <Typography variant="body2">{item.overview}</Typography>
-            </CardContent>
+            </ECardContent>
           </Grid>
         </Grid>
-        <IconButton
+        <EIconButton
           edge="end"
           color="inherit"
           onClick={onClose}
           aria-label="close"
-          sx={{ position: "absolute", top: 8, right: 35 }}
         >
           <CloseIcon />
-        </IconButton>
+        </EIconButton>
       </DialogContent>
-    </Dialog>
+    </EDialog>
   );
 }
 

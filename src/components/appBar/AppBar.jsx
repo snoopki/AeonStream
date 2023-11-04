@@ -13,8 +13,12 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { useParams, useNavigate } from "react-router-dom";
-import users from "../users";
+import { useNavigate } from "react-router-dom";
+import users from "../../users";
+import * as useLocalStorage from "../../action/services/useLocalStorage";
+import { calculateSimilarity } from "../../constant/calculateSimilarity";
+import { searchMoviesByName, searchTvShowsByName } from "../../action/fetch";
+import { EAppBar, EAvatar, EButton, ESearchButton, ETextField } from "./style";
 
 function AppBarComponent() {
   const [isSearchOpen, setSearchOpen] = useState(false);
@@ -23,9 +27,10 @@ function AppBarComponent() {
   const [searchInput, setSearchInput] = useState("");
   const navigate = useNavigate();
 
-  const handleSearchClick = () => {
-    setSearchOpen(!isSearchOpen);
-  };
+  const [user, setUser] = useState(null);
+
+  const handleSearchClick = () => setSearchOpen(!isSearchOpen);
+  const num = 8;
 
   const handleDropdownClick = (event) => {
     setAvatarAnchorEl(event.currentTarget);
@@ -38,97 +43,122 @@ function AppBarComponent() {
       navigate("/");
     }
   };
-  const { id } = useParams();
-
-  const user = users.find((user) => user.id.toString() === id);
-
-  const handleLinkClick = (route) => {
-    if (route === "search" && searchInput.trim() !== "") {
-      navigate(`/streamingPage/${id}/search/${searchInput}`);
-    } else if (route !== "search") {
-      navigate(`/streamingPage/${id}/${route}`);
+  useEffect(() => {
+    const storedUserId = useLocalStorage.readFromLocalStorage("userName");
+    if (storedUserId) {
+      const foundUser = users.find(
+        (user) => user.id.toString() === storedUserId
+      );
+      setUser(foundUser);
     }
+  }, []);
+  const handleLinkClick = (route) => {
+    switch (route) {
+      case "search":
+        if (searchInput.trim()) {
+          navigate(`/streamingPage/search/${searchInput}`);
+        }
+        break;
+      case "movies":
+      case "tvShows":
+        navigate(`/streamingPage/GenresPage`);
+
+        break;
+      default:
+        navigate(`/streamingPage/${route}`);
+
+        break;
+    }
+    useLocalStorage.saveToLocalStorage("localStoragePage", route);
   };
 
+  useEffect(() => {
+    Promise.all([
+      searchMoviesByName(searchInput, num),
+      searchTvShowsByName(searchInput, num),
+    ])
+      .then(([movieResults, tvResults]) => {
+        const mergedResults = [...movieResults, ...tvResults];
+        mergedResults.sort((itemA, itemB) => {
+          const similarityA = calculateSimilarity(
+            itemA.title || itemA.name,
+            searchInput
+          );
+          const similarityB = calculateSimilarity(
+            itemB.title || itemB.name,
+            searchInput
+          );
+
+          return similarityB - similarityA;
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching search results:", error);
+      });
+  }, [searchInput]);
+
   return (
-    <AppBar
-      position="absolute"
-      sx={{ background: "transparent", boxShadow: "none" }}
-    >
+    <EAppBar position="absolute">
       <Toolbar>
         <Grid container alignItems="center">
           <Grid item>
             <Typography color="primary" variant="h4" sx={{ mr: 5 }}>
-              Streaming Watch
+              Aeon Stream
             </Typography>
           </Grid>
           <Grid item sx={{ flexGrow: 1 }}>
             <Grid container spacing={2} justifyContent="center">
               <Grid item>
-                <Button
+                <EButton
                   color="secondary"
-                  sx={{ fontWeight: "bold" }}
                   onClick={() => handleLinkClick("home")}
                 >
                   Home
-                </Button>
+                </EButton>
               </Grid>
               <Grid item>
-                <Button
+                <EButton
                   color="secondary"
-                  sx={{ fontWeight: "bold" }}
                   onClick={() => handleLinkClick("movies")}
                 >
                   Movies
-                </Button>
+                </EButton>
               </Grid>
               <Grid item>
-                <Button
+                <EButton
                   color="secondary"
-                  sx={{ fontWeight: "bold" }}
                   onClick={() => handleLinkClick("tvShows")}
                 >
                   TV Show
-                </Button>
+                </EButton>
               </Grid>
-              <Grid item>
-                <Button
-                  color="secondary"
-                  sx={{ fontWeight: "bold" }}
-                  onClick={() => handleLinkClick("faq")}
-                >
-                  FAQ
-                </Button>
-              </Grid>
+
               <Grid item sx={{ flexGrow: 1 }}>
-                <Button
+                <EButton
                   color="secondary"
-                  sx={{ fontWeight: "bold" }}
                   onClick={() => handleLinkClick("contact")}
                 >
                   Contact Us
-                </Button>
+                </EButton>
               </Grid>
             </Grid>
           </Grid>
           <Grid item sx={{ mr: 1.5 }}>
             {isSearchOpen && (
-              <TextField
+              <ETextField
                 label="Search"
                 variant="outlined"
-                sx={{ mr: 1.5 }}
                 value={searchInput}
                 onChange={(event) => setSearchInput(event.target.value)}
               />
             )}
             {isSearchOpen && (
-              <Button
+              <ESearchButton
                 color="secondary"
-                sx={{ fontWeight: "bold" }}
                 onClick={() => handleLinkClick("search")}
               >
                 Search
-              </Button>
+              </ESearchButton>
             )}
           </Grid>
           <Grid item>
@@ -142,23 +172,18 @@ function AppBarComponent() {
           </Grid>
           <Grid item sx={{ mr: 1, ml: 2 }}>
             {user && (
-              <Avatar
+              <EAvatar
                 alt={user.name}
                 src={user.imgURL}
                 onClick={handleDropdownClick}
-                sx={{
-                  cursor: "pointer",
-                  width: 52,
-                  height: 52,
-                  overflow: "hidden",
-                  mr: 3,
-                }}
               />
             )}
+
             <Menu
               anchorEl={avatarAnchorEl}
               open={isDropdownOpen}
               onClose={closeDropdown}
+              disableScrollLock={true}
             >
               <MenuItem onClick={closeDropdown}>Logout</MenuItem>
               <MenuItem onClick={closeDropdown}>Close</MenuItem>
@@ -166,7 +191,7 @@ function AppBarComponent() {
           </Grid>
         </Grid>
       </Toolbar>
-    </AppBar>
+    </EAppBar>
   );
 }
 

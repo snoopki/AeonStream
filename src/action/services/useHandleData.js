@@ -1,22 +1,26 @@
 import useApi from "./useApi";
-import useLocalStorage from "./useLocalStorage.js";
 import { useState } from "react";
+import * as localStorageHandler from "./useLocalStorage.js";
 
 function useHandleData() {
-  const localStorageHandler = useLocalStorage();
   const useApiHandler = useApi();
   const [isLoading, setIsLoading] = useState(true);
   const futureDate = new Date();
   futureDate.setDate(futureDate.getDate() + 1);
+  const futureDateISO = futureDate.toISOString();
+  const currentDate = new Date();
 
   const localStorageUpdate = new Date(
     localStorage.getItem("localStorageUpdate")
   );
-  const currentDate = new Date();
+
   async function fetchAndSaveDataToLocalStorage(num) {
     if (!localStorageUpdate || localStorageUpdate <= currentDate) {
       const data = await useApiHandler.fetchData(num);
-      localStorageHandler.saveToLocalStorage(`localStorageUpdate`, futureDate);
+      localStorageHandler.saveToLocalStorage(
+        `localStorageUpdate`,
+        futureDateISO
+      );
       if (data.topMovies) {
         data.topMovies.forEach((movie) => {
           localStorageHandler.saveToLocalStorage(`movie_${movie.id}`, movie);
