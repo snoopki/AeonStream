@@ -107,7 +107,7 @@ function AppBarComponent() {
             </Typography>
           </Grid>
           <Grid item sx={{ flexGrow: 1 }}>
-            <Grid container spacing={2} justifyContent="center">
+            <Grid container spacing={2} justifyContent="flex-start">
               <Grid item>
                 <EButton
                   color="secondary"

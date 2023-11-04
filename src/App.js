@@ -4,8 +4,9 @@ import Login from "./pages/LoginPage";
 import StreamingPage from "./pages/StreamingPage";
 import GenresPage from "./pages/GenresPage";
 import SearchPage from "./pages/SearchPage";
+import ContactUsPage from "./pages/ContactUsPage";
+import { ThemeProvider, CssBaseline } from "@mui/material";
 
-import { ThemeProvider, CssBaseline, createTheme } from "@mui/material";
 import { theme } from "./context/theme";
 
 function App() {
@@ -27,6 +28,10 @@ function App() {
       {
         path: "/streamingPage/search/:searchInput",
         element: <SearchPage />,
+      },
+      {
+        path: "/streamingPage/contact",
+        element: <ContactUsPage />,
       },
       {
         path: "*",
