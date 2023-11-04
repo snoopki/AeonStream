@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Typography, Container, Grid, Button } from "@mui/material";
-import UserCard from "../components/UserCard";
-import Modal from "../components/Modal";
+import UserCard from "../components/UserCard/UserCard";
+import Modal from "../components/Modal/Modal";
 import users from "../users";
 
 function Login() {
@@ -20,7 +20,6 @@ function Login() {
   const handleModalClose = () => {
     setIsModalOpen(false);
   };
-  
 
   return (
     <>
@@ -55,7 +54,6 @@ function Login() {
           color="third"
           size="large"
           onClick={handleModalOpen}
-          sx={{ fontWeight: "bold" }}
         >
           add user
         </Button>

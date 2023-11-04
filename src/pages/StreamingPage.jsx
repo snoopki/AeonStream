@@ -1,17 +1,16 @@
 import React, { useEffect } from "react";
 import { Container, Typography, Box } from "@mui/material";
-import Carousel from "../components/Carousel";
-import useFuncOfStorage from "../action/services/useFuncOfStorage";
+import Carousel from "../components/carousel/Carousel";
+import * as GetFromStorage from "../action/services/useFuncOfStorage";
 import useHandleData from "../action/services/useHandleData";
-import AppBarComponent from "../components/AppBar";
-import ImageBackground from "../components/ImageBackground";
+import AppBarComponent from "../components/appBar/AppBar";
+import ImageBackground from "../components/ImageBackground/ImageBackground";
 
 function StreamingPage() {
   const requestForMoviesAndTvShows = 500;
 
   const handleData = useHandleData();
   const { fetchAndSaveDataToLocalStorage, isLoading } = handleData;
-  const GetFromStorage = useFuncOfStorage();
 
   useEffect(() => {
     fetchAndSaveDataToLocalStorage(requestForMoviesAndTvShows);
