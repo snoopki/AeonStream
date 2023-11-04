@@ -1,6 +1,6 @@
 import React from "react";
 import { Typography, Container, Link } from "@mui/material";
-import AppBarComponent from "../components/AppBar";
+import AppBarComponent from "../components/appBar/AppBar";
 
 function ContactUsPage() {
   return (

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Box, Container } from "@mui/material";
-import Carousel from "../components/Carousel";
+import Carousel from "../components/carousel/Carousel";
 import { searchMoviesByName, searchTvShowsByName } from "../action/fetch";
 import { useParams } from "react-router-dom";
-import AppBarComponent from "../components/AppBar";
+import AppBarComponent from "../components/appBar/AppBar";
 import { calculateSimilarity } from "../constant/calculateSimilarity";
 
 function SearchPage() {
@@ -41,7 +41,7 @@ function SearchPage() {
     <Box>
       <AppBarComponent />
       <Container maxWidth={false} sx={{ mt: 15 }}>
-        <Carousel apiFetched={searchResults} title="Search result" />
+        <Carousel getTitelsFromApi={searchResults} title="Search result" />
       </Container>
     </Box>
   );

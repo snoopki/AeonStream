@@ -1,17 +1,12 @@
-import React, { useEffect, useState } from "react";
-import {
-  useRoutes,
-  Navigate,
-  BrowserRouter,
-  useParams,
-} from "react-router-dom";
+import React from "react";
+import { useRoutes, Navigate, BrowserRouter } from "react-router-dom";
 import Login from "./pages/LoginPage";
 import StreamingPage from "./pages/StreamingPage";
-import MoviesPage from "./pages/MoviesPage";
-import TvShowsPage from "./pages/TvShowsPage";
+import GenresPage from "./pages/GenresPage";
 import SearchPage from "./pages/SearchPage";
 import ContactUsPage from "./pages/ContactUsPage";
-import { useTheme, ThemeProvider, CssBaseline } from "@mui/material";
+import { ThemeProvider, CssBaseline } from "@mui/material";
+
 import { theme } from "./context/theme";
 
 function App() {
@@ -22,23 +17,20 @@ function App() {
         element: <Login />,
       },
       {
-        path: "/streamingPage/:id/home",
+        path: "/streamingPage/home",
         element: <StreamingPage />,
       },
       {
-        path: "/streamingPage/:id/movies",
-        element: <MoviesPage />,
+        path: "/streamingPage/GenresPage",
+        element: <GenresPage />,
       },
+
       {
-        path: "/streamingPage/:id/tvShows",
-        element: <TvShowsPage />,
-      },
-      {
-        path: "/streamingPage/:id/search/:searchInput",
+        path: "/streamingPage/search/:searchInput",
         element: <SearchPage />,
       },
       {
-        path: "/streamingPage/:id/ContactUs",
+        path: "/streamingPage/contact",
         element: <ContactUsPage />,
       },
       {

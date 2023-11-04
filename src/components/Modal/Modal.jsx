@@ -15,17 +15,20 @@ import {
   Grid,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import users from "../users";
+import users from "../../users";
+import { EButton, EIconButton } from "./style";
 
 function Modal({ onClose }) {
   const [newUserName, setNewUserName] = useState("");
+  const truncatedName =
+    newUserName.length > 10 ? `${newUserName.slice(0, 10)}...` : newUserName;
 
   const handleAddButtonClick = () => {
     const newUserId = users[users.length - 1].id + 1;
 
     const newUser = {
       id: newUserId,
-      name: newUserName,
+      name: truncatedName,
       imgURL:
         "https://avatars.akamai.steamstatic.com/28e765fbb2612a9541dd162f73317f2f23a26346_full.jpg",
     };
@@ -69,28 +72,26 @@ function Modal({ onClose }) {
               />
             </Grid>
             <Grid>
-              <Button
+              <EButton
                 item
-                sx={{ marginLeft: 2, height: 60, mt: 2, fontWeight: "bold" }}
                 onClick={handleAddButtonClick}
                 variant="contained"
                 color="primary"
               >
                 Add user
-              </Button>
+              </EButton>
             </Grid>
           </Grid>
         </Container>
       </DialogContent>
-      <IconButton
+      <EIconButton
         edge="end"
         color="inherit"
         onClick={onClose}
         aria-label="close"
-        sx={{ position: "absolute", top: 8, right: 15 }}
       >
         <CloseIcon />
-      </IconButton>
+      </EIconButton>
     </Dialog>
   );
 }
