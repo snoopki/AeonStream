@@ -16,8 +16,8 @@ export const EAppBar = styled(AppBar)`
 
 export const EAvatar = styled(Avatar)`
   cursor: pointer;
-  width: 52;
-  height: 52;
+  width: 52px;
+  height: 52px;
   overflow: hidden;
 `;
 

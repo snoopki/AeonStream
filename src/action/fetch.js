@@ -52,6 +52,16 @@ const fetchWatchID = async (uri) => {
   throw new Error("Request failed after 3 retries");
 };
 
+export const getTrailerMovies = async (movieId) => {
+  const uri = `movie/${movieId}/videos?language=en-US`;
+  return fetchWatchID(uri);
+};
+
+export const getTrailerTvShow = async (tvId) => {
+  const uri = `tv/${tvId}/videos?language=en-US`;
+  return fetchWatchID(uri);
+};
+
 export const genereMovie = async () => {
   const uri = "genre/movie/list?language=en";
   return fetchWatchID(uri);
