@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import {
-  AppBar,
   Toolbar,
   Typography,
   IconButton,
-  Button,
-  Avatar,
   Menu,
+  Box,
   MenuItem,
   TextField,
   Grid,
+  Modal,
+  Paper,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -19,6 +19,7 @@ import * as useLocalStorage from "../../action/services/useLocalStorage";
 import { calculateSimilarity } from "../../constant/calculateSimilarity";
 import { searchMoviesByName, searchTvShowsByName } from "../../action/fetch";
 import { EAppBar, EAvatar, EButton, ESearchButton, ETextField } from "./style";
+import ModalDetails from "../ModalDetailes/ModalDetailes";
 
 function AppBarComponent() {
   const [isSearchOpen, setSearchOpen] = useState(false);
@@ -26,11 +27,24 @@ function AppBarComponent() {
   const [avatarAnchorEl, setAvatarAnchorEl] = useState(null);
   const [searchInput, setSearchInput] = useState("");
   const navigate = useNavigate();
+  const [menuAnchorEl, setMenuAnchorEl] = useState(null);
+  const [filteredResults, setFilteredResults] = useState([]);
+  const [isMenuDropdownOpen, setMenuDropdownOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [isModalOpen, setModalOpen] = useState(false);
 
   const [user, setUser] = useState(null);
-
-  const handleSearchClick = () => setSearchOpen(!isSearchOpen);
   const num = 8;
+
+  const handleSearchClick = () => {
+    setSearchOpen(!isSearchOpen);
+    setMenuDropdownOpen(false);
+  };
+
+  const handleMenuOpen = (event) => {
+    setMenuAnchorEl(event.currentTarget);
+    setMenuDropdownOpen(true);
+  };
 
   const handleDropdownClick = (event) => {
     setAvatarAnchorEl(event.currentTarget);
@@ -72,30 +86,48 @@ function AppBarComponent() {
     useLocalStorage.saveToLocalStorage("localStoragePage", route);
   };
 
-  useEffect(() => {
+  const handleSearchInputChange = (event) => {
+    const inputValue = event.target.value;
+
+    setSearchInput(inputValue);
     Promise.all([
-      searchMoviesByName(searchInput, num),
-      searchTvShowsByName(searchInput, num),
+      searchMoviesByName(inputValue, num),
+      searchTvShowsByName(inputValue, num),
     ])
       .then(([movieResults, tvResults]) => {
         const mergedResults = [...movieResults, ...tvResults];
         mergedResults.sort((itemA, itemB) => {
           const similarityA = calculateSimilarity(
             itemA.title || itemA.name,
-            searchInput
+            inputValue
           );
           const similarityB = calculateSimilarity(
             itemB.title || itemB.name,
-            searchInput
+            inputValue
           );
 
           return similarityB - similarityA;
         });
+
+        const filteredItems = mergedResults.filter((item) => {
+          const titleOrName = item.title || item.name;
+          return titleOrName.toLowerCase().includes(inputValue.toLowerCase());
+        });
+        setFilteredResults(filteredItems);
       })
       .catch((error) => {
         console.error("Error fetching search results:", error);
       });
-  }, [searchInput]);
+  };
+
+  const handleMenuItemClick = (item) => {
+    setSelectedItem(item);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
 
   return (
     <EAppBar position="absolute">
@@ -129,7 +161,7 @@ function AppBarComponent() {
                   color="secondary"
                   onClick={() => handleLinkClick("tvShows")}
                 >
-                  TV Show
+                  TV Shows
                 </EButton>
               </Grid>
 
@@ -143,14 +175,42 @@ function AppBarComponent() {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item sx={{ mr: 1.5 }}>
+          <Grid item sx={{ display: "flex", alignItems: "center", mr: 1 }}>
             {isSearchOpen && (
-              <ETextField
-                label="Search"
-                variant="outlined"
-                value={searchInput}
-                onChange={(event) => setSearchInput(event.target.value)}
-              />
+              <Box sx={{ mr: 1 }}>
+                <TextField
+                  label="Search"
+                  variant="outlined"
+                  value={searchInput}
+                  onChange={(event) => {
+                    handleSearchInputChange(event);
+                    handleMenuOpen(event);
+                  }}
+                />
+                {searchInput.length > 0 && (
+                  <Menu
+                    disableAutoFocus={true}
+                    autoFocus={false}
+                    disableAutoFocusItem={true}
+                    disableScrollLock={true}
+                    anchorEl={menuAnchorEl}
+                    open={isMenuDropdownOpen}
+                    onClose={() => setMenuDropdownOpen(false)}
+                    sx={{
+                      position: "absolute",
+                    }}
+                  >
+                    {filteredResults.map((item) => (
+                      <MenuItem
+                        key={item.id}
+                        onClick={() => handleMenuItemClick(item)}
+                      >
+                        {item.title || item.name}
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                )}
+              </Box>
             )}
             {isSearchOpen && (
               <ESearchButton
@@ -161,7 +221,8 @@ function AppBarComponent() {
               </ESearchButton>
             )}
           </Grid>
-          <Grid item>
+
+          <Grid>
             <IconButton
               color="secondary"
               aria-label="search"
@@ -184,12 +245,20 @@ function AppBarComponent() {
               open={isDropdownOpen}
               onClose={closeDropdown}
               disableScrollLock={true}
+              sx={{
+                position: "absolute",
+              }}
             >
               <MenuItem onClick={closeDropdown}>Logout</MenuItem>
               <MenuItem onClick={closeDropdown}>Close</MenuItem>
             </Menu>
           </Grid>
         </Grid>
+        <Modal open={isModalOpen} onClose={handleCloseModal}>
+          <Paper>
+            <ModalDetails item={selectedItem} onClose={handleCloseModal} />
+          </Paper>
+        </Modal>
       </Toolbar>
     </EAppBar>
   );

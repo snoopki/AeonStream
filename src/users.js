@@ -3,25 +3,25 @@ const users = [
     id: 1,
     name: "yuval",
     imgURL:
-      "https://www.nicepng.com/png/detail/917-9178347_familyguy-dank-meme-dankmemes-wtf-dafuq-lmao-peter.png",
+      "https://wallpapers.com/images/high/netflix-profile-pictures-1000-x-1000-vnl1thqrh02x7ra2.webp",
   },
   {
     id: 2,
     name: "dani",
     imgURL:
-      "https://w7.pngwing.com/pngs/315/968/png-transparent-doki-doki-literature-club-team-salvato-video-game-protagonist-others-miscellaneous-game-reading-thumbnail.png",
+      "https://wallpapers.com/images/high/netflix-profile-pictures-1000-x-1000-dyrp6bw6adbulg5b.webp",
   },
   {
     id: 3,
     name: "omri",
     imgURL:
-      "https://freepngimg.com/thumb/meme/98878-meme-dank-green-free-photo.png",
+      "https://wallpapers.com/images/high/netflix-profile-pictures-5yup5hd2i60x7ew3.webp",
   },
   {
     id: 4,
     name: "the cooler omri",
     imgURL:
-      "https://freepngimg.com/thumb/meme/98878-meme-dank-green-free-photo.png",
+      "https://wallpapers.com/images/high/netflix-profile-pictures-1000-x-1000-qo9h82134t9nv0j0.webp",
   },
 ];
 
