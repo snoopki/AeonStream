@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
   Dialog,
@@ -13,13 +13,9 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { genreMapMovie } from "../../constant/genreMapMovies";
 import { genreMapTvShow } from "../../constant/genreMapTvShows";
-import {
-  ECardContent,
-  EDialog,
-  EIconButton,
-  ETypography,
-  ETypographyBigSpace,
-} from "./style";
+import { getTrailerMovies, getTrailerTvShow } from "../../action/fetch";
+
+import { ECardContent, EDialog, EIconButton } from "./style";
 
 const mapGenreIdsToNames = (genreIds, genreMap) => {
   const genreNames = genreIds.map((id) => {
@@ -30,9 +26,29 @@ const mapGenreIdsToNames = (genreIds, genreMap) => {
 };
 
 function ModalDetails({ item, onClose }) {
+  const [videoKey, setVideoKey] = useState(null);
+  const [isLoading, setLoading] = useState(true);
   const movieGenres = mapGenreIdsToNames(item.genre_ids, genreMapMovie);
   const tvShowGenres = mapGenreIdsToNames(item.genre_ids, genreMapTvShow);
   const genres = item.title ? movieGenres : tvShowGenres;
+
+  useEffect(() => {
+    const fetchVideoKey = async () => {
+      try {
+        const { results } = item.title
+          ? await getTrailerMovies(item.id)
+          : await getTrailerTvShow(item.id);
+        const key = results[0]?.key;
+        setVideoKey(key);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching video key:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchVideoKey();
+  }, [item.id, item.title]);
 
   return (
     <EDialog open={true} fullScreen>
@@ -41,10 +57,10 @@ function ModalDetails({ item, onClose }) {
           <Grid item md={6}>
             <Card sx={{ height: "100vh" }}>
               <CardMedia
-                component="img"
-                height="100%"
-                src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
-                alt={item.title ? item.title : item.name}
+                component="iframe"
+                height="500px"
+                src={`https://www.youtube.com/embed/${videoKey}`}
+                title="YouTube video player"
               />
             </Card>
           </Grid>
@@ -82,10 +98,5 @@ function ModalDetails({ item, onClose }) {
     </EDialog>
   );
 }
-
-ModalDetails.propTypes = {
-  item: PropTypes.object.isRequired,
-  onClose: PropTypes.func.isRequired,
-};
 
 export default ModalDetails;

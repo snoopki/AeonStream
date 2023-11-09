@@ -20,6 +20,8 @@ import { EButton, EIconButton } from "./style";
 
 function Modal({ onClose }) {
   const [newUserName, setNewUserName] = useState("");
+  const image =
+    "https://wallpapers.com/images/high/netflix-profile-pictures-1000-x-1000-88wkdmjrorckekha.webp";
   const truncatedName =
     newUserName.length > 10 ? `${newUserName.slice(0, 10)}...` : newUserName;
 
@@ -29,8 +31,7 @@ function Modal({ onClose }) {
     const newUser = {
       id: newUserId,
       name: truncatedName,
-      imgURL:
-        "https://avatars.akamai.steamstatic.com/28e765fbb2612a9541dd162f73317f2f23a26346_full.jpg",
+      imgURL: image,
     };
 
     users.push(newUser);
@@ -57,7 +58,7 @@ function Modal({ onClose }) {
                   component="img"
                   alt="User"
                   height="120"
-                  image="https://avatars.akamai.steamstatic.com/28e765fbb2612a9541dd162f73317f2f23a26346_full.jpg"
+                  image="https://wallpapers.com/images/high/netflix-profile-pictures-1000-x-1000-88wkdmjrorckekha.webp"
                 />
               </Card>
             </Grid>
